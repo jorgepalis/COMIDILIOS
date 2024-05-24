@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-*9o4o@znv4=im_y-5wcp)k7@cyolp+v)ip+3kybwl5s_-k3a0l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['64.23.139.179','127.0.0.1', '10.0.2.2', 'fiscaliaycontraloria.com']
+ALLOWED_HOSTS = ['64.23.139.179', '127.0.0.1',
+                 '10.0.2.2', 'fiscaliaycontraloria.com']
 
 
 # Application definition
@@ -94,7 +95,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'db_fiscaliaycontraloria',
+            'NAME': 'db_fiscaliaycontralori',
             'USER': 'user_fiscaliaycontraloria',
             'PASSWORD': 'Database10.CD',
             'HOST': 'localhost',
