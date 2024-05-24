@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*9o4o@znv4=im_y-5wcp)k7@cyolp+v)ip+3kybwl5s_-k3a0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['64.23.139.179', '127.0.0.1',
                  '10.0.2.2', 'fiscaliaycontraloria.com']
@@ -87,8 +87,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'palis963_domidilios',
+            'USER': 'palis963',
+            'PASSWORD': '2906952929pp',
+            'HOST': 'postgresql-palis963.alwaysdata.net',
+            'PORT': '5432',
         }
     }
 else:
