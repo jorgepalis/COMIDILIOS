@@ -10,7 +10,8 @@ ADDRESS_CHOICES = (
 
 
 class Shop(models.Model):
-    # user = models.OneToOneField(User, related_name='products', on_delete=models.SET_NULL, blank=True, null=True, limit_choices_to={'is_vendor': True})
+    user = models.OneToOneField(User, related_name='products', on_delete=models.SET_NULL,
+                                blank=True, null=True, limit_choices_to={'is_vendor': True})
     owner_email = models.EmailField(unique=True, blank=True, null=True)
     owner_name = models.CharField(max_length=255, blank=True, default='')
     owner_phone = models.CharField(max_length=255, blank=True, default='')
