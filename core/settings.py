@@ -95,7 +95,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'db_fiscaliaycontralorias',
+            'NAME': 'db_fiscaliaycontralori',
             'USER': 'user_fiscaliaycontraloria',
             'PASSWORD': 'Database10.CD',
             'HOST': 'localhost',
