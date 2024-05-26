@@ -90,7 +90,7 @@ if DEBUG:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'palis963_domidilios',
             'USER': 'palis963',
-            'PASSWORD': '2906952929pp',
+            'PASSWORD': '2906952929pa',
             'HOST': 'postgresql-palis963.alwaysdata.net',
             'PORT': '5432',
         }
