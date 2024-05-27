@@ -1,0 +1,71 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load static tailwind_tags %}
+
+
+{% block title  %}
+<title>Categorias</title>
+{% endblock title  %}
+
+{% block main %}
+
+
+<div class="flex items-center justify-center mt-20 ">
+    <a href="{% url 'store2:crear-categoria' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear Categoria</a>
+</div>
+
+<!-----------------------tabla productos------------------------------------------>
+<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Nombre Categoria
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                    Subcategoria
+                </th>
+                
+                <th scope="col" class="px-6 py-3">
+                    Acción
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if categorias %}
+            
+            {% for categoria in categorias  %}
+            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ categoria.name|capfirst }}
+                </th>
+
+                <td class="px-6 py-4">
+                    {% for subcategoria in categoria.subcategorias.all %}
+                        {{ subcategoria.name|capfirst }}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                
+                <th class="px-6 py-4">
+                    <a href="{% url 'store2:actualizar-categoria' categoria.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Edit</a>
+                    <a href="{% url 'store2:eliminar-categoria' categoria.id %}" class="font-medium text-red-600 dark:text-red-700 hover:underline mr-3">Delete</a>
+                    <a href="{% url 'store2:lista-subcategorias' categoria.id %}" class="font-medium text-green-600 dark:text-green-700 hover:underline ml-3">Subcategorias</a>
+
+                    {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
+                </th>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No hay categorias</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock main %}
+

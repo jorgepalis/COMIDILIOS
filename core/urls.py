@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/', include('store.urls')),
     path('auth/', include('auth2.urls', namespace='auth2')),
     path('', include('main.urls', namespace='main')),
+    path('store2/', include('store2.urls', namespace='store2')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

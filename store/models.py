@@ -40,6 +40,9 @@ class SubCategory(models.Model):
     image = models.ImageField(
         upload_to='subcategory_images/', blank=True, null=True)
 
+    category = models.ForeignKey(
+        'Category', on_delete=models.CASCADE, blank=True, null=True, related_name='main_sub_categories')
+
     def __str__(self):
         return self.name
 
@@ -48,7 +51,8 @@ class Category(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(
         upload_to='category_images/', blank=True, null=True)
-    sub_categories = models.ManyToManyField(SubCategory, blank=True)
+    sub_categories = models.ManyToManyField(
+        SubCategory, blank=True, related_name='main_categories')
 
     def __str__(self):
         return f'{self.name}'
