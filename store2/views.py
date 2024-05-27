@@ -65,7 +65,66 @@ class ActualizarCategoria(UpdateView):
 
 # vistas para subcategorias
 
+# lista de subcategorias
 class ListaSubCategorias(ListView):
     model = SubCategory
     template_name = 'store2/lista-subcategorias.html'
     context_object_name = 'subcategorias'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        return SubCategory.objects.filter(category=self.category)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        return context
+
+# crear subcategoria
+
+
+class CrearSubCategoria(CreateView):
+    model = SubCategory
+    form_class = SubcategoryForm
+    template_name = 'store2/crear-subcategoria.html'
+    success_url = reverse_lazy('store2:lista-categorias')
+
+    def dispatch(self, *args, **kwargs):
+        # Verifica que la categoría existe
+        self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['category'] = self.category
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['category'].queryset = Category.objects.filter(
+            pk=self.category.pk)
+        form.fields['category'].initial = self.category
+        form.fields['category'].widget.attrs['readonly'] = True
+        return form
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        if SubCategory.objects.filter(name=name).exists():
+            messages.error(request, 'La subcategoría ya existe')
+            return redirect('store2:crear-subcategoria', slug=self.kwargs['slug'])
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.category = self.category
+        messages.success(self.request, 'Subcategoría creada correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear la subcategoría')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = get_object_or_404(
+            Category, slug=self.kwargs['slug'])
+        return context

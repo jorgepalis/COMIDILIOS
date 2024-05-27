@@ -51,7 +51,7 @@
                 <th class="px-6 py-4">
                     <a href="{% url 'store2:actualizar-categoria' categoria.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Edit</a>
                     <a href="{% url 'store2:eliminar-categoria' categoria.id %}" class="font-medium text-red-600 dark:text-red-700 hover:underline mr-3">Delete</a>
-                    <a href="{% url 'store2:lista-subcategorias' categoria.id %}" class="font-medium text-green-600 dark:text-green-700 hover:underline ml-3">Subcategorias</a>
+                    <a href="{% url 'store2:lista-subcategorias' categoria.slug %}" class="font-medium text-green-600 dark:text-green-700 hover:underline ml-3">Subcategorias</a>
 
                     {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
                 </th>

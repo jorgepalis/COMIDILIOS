@@ -24,11 +24,12 @@ class Shop(models.Model):
     reviews = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # slug = models.SlugField()
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.slug or Shop.objects.filter(pk=self.pk, name=self.name).exists():
             self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -39,12 +40,17 @@ class SubCategory(models.Model):
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(
         upload_to='subcategory_images/', blank=True, null=True)
-
     category = models.ForeignKey(
         'Category', on_delete=models.CASCADE, blank=True, null=True, related_name='main_sub_categories')
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug or SubCategory.objects.filter(pk=self.pk, name=self.name).exists():
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Category(models.Model):
@@ -56,6 +62,12 @@ class Category(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+    slug = models.SlugField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug or Category.objects.filter(pk=self.pk, name=self.name).exists():
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Tags(models.Model):
