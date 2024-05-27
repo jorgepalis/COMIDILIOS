@@ -16,4 +16,8 @@ urlpatterns = [
          views.ListaSubCategorias.as_view(), name='lista-subcategorias'),
     path('crear-subcategoria/<slug>/', views.CrearSubCategoria.as_view(),
          name='crear-subcategoria'),
+    path('eliminar-subcategoria/<slug>/',
+         views.EliminarSubCategoria.as_view(), name='eliminar-subcategoria'),
+    path('actualizar-subcategoria/<slug>/',
+         views.ActualizarSubCategoria.as_view(), name='actualizar-subcategoria'),
 ]

@@ -87,7 +87,9 @@ class CrearSubCategoria(CreateView):
     model = SubCategory
     form_class = SubcategoryForm
     template_name = 'store2/crear-subcategoria.html'
-    success_url = reverse_lazy('store2:lista-categorias')
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-subcategorias', kwargs={'slug': self.kwargs['slug']})
 
     def dispatch(self, *args, **kwargs):
         # Verifica que la categoría existe
@@ -127,4 +129,44 @@ class CrearSubCategoria(CreateView):
         context = super().get_context_data(**kwargs)
         context['category'] = get_object_or_404(
             Category, slug=self.kwargs['slug'])
+        return context
+
+
+# eliminar subcategoria
+
+class EliminarSubCategoria(DeleteView):
+    model = SubCategory
+    template_name = 'store2/eliminar-subcategoria.html'
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-subcategorias', kwargs={'slug': self.object.category.slug})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Subcategoría eliminada correctamente')
+        return super().form_valid(form)
+
+
+# actualizar subcategoria
+
+class ActualizarSubCategoria(UpdateView):
+    model = SubCategory
+    form_class = SubcategoryForm
+    template_name = 'store2/actualizar-subcategoria.html'
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-subcategorias', kwargs={'slug': self.object.category.slug})
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'Subcategoría actualizada correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al actualizar la subcategoría')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = get_object_or_404(
+            Category, slug=self.object.category.slug)
         return context
