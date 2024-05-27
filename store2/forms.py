@@ -7,11 +7,10 @@ from store.models import Category, SubCategory
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'image', 'sub_categories']
+        fields = ['name', 'image']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
-            'sub_categories': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
 

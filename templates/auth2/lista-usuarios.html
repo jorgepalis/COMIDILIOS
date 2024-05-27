@@ -50,10 +50,14 @@
                 </td>
 
                 <td class="px-6 py-4">
-                    {% if usuario.shop %}
-                    
+                    {% if usuario.is_vendor %}
+                        {{ usuario.products.name }}
+                    {% elif usuario.is_admin %}
+                        Admin
                     {% else %}
+                        No tiene tienda
                     {% endif %}
+                    
                 </td>
                 
                 <th class="px-6 py-4">

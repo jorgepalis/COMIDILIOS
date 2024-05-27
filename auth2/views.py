@@ -20,7 +20,7 @@ def crear_usuario(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Usuario creado correctamente')
-            return redirect('auth2:listar-usuario')
+            return redirect('auth2:listar-usuarios')
     return render(request, 'auth2/crear-usuario.html', {'form': form})
 
 # vista para eliminar usuarios
