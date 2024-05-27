@@ -42,3 +42,7 @@ urllib3==2.0.7
 whitenoise==6.6.0
 zope.interface==6.2
 requests
+
+## nuevos
+django-tailwind == 3.8.0
+django-browser-reload == 1.12.1

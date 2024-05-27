@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title  %}
+<title>Iniciar sesi'on</title>
+{% endblock  %}
+
+{% block main %}
+    <h1>Iniciar Sesión</h1>
+    <form method="post">
+        {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+{% endblock main %}

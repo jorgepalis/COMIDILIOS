@@ -24,7 +24,7 @@ class Shop(models.Model):
     reviews = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    slug = models.SlugField()
+    # slug = models.SlugField()
 
     def save(self, *args, **kwargs):
         if not self.slug:

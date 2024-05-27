@@ -1,0 +1,31 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load static tailwind_tags %}
+
+
+{% block title  %}
+<title>Editar usuario</title>
+{% endblock title  %}
+
+{% block main %}
+{% if messages %}
+{% for mensaje in  messages %}
+<div class="bg-red-100 border border-black text-green-600 px-4 py-3 rounded">
+    <span class="block">{{ mensaje }}</span>
+</div>
+{% endfor %}
+{% else %}
+{% endif %}
+
+<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7 flex-col gap-5">
+    <h1>Editar Usuario</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Editar Usuario</button>
+    </form>
+</div>
+
+
+
+{% endblock main %}
