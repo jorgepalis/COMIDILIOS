@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.contrib import messages
-from store.models import Category, SubCategory, Attribute, AttributeChild
-from store2.forms import CategoryForm, SubcategoryForm, AttributeForm, AttributeChildForm
+from store.models import Category, SubCategory, Attribute, AttributeChild, Shop, Aditions
+from store2.forms import CategoryForm, SubcategoryForm, AttributeForm, AttributeChildForm, ShopForm
 
 # Create your views here.
 
@@ -336,4 +336,102 @@ class EliminarAtributoHijo(DeleteView):
         return super().form_valid(form)
 
 
+# vistas tiendas
+
+# lista de tiendas
+class ListaTiendas(ListView):
+    model = Shop
+    template_name = 'store2/lista-tiendas.html'
+    context_object_name = 'tiendas'
+
+
+# gestion de tiendas
+
+def gestion_tienda(request, slug):
+    tienda = get_object_or_404(Shop, slug=slug)
+    context = {
+        'tienda': tienda
+    }
+    return render(request, 'store2/gestion-tienda.html', context)
+
+# actualizar tienda
+
+
+class ActualizarTienda(UpdateView):
+    model = Shop
+    template_name = 'store2/actualizar-tienda.html'
+    form_class = ShopForm
+
+    def get_success_url(self):
+        return reverse_lazy('store2:gestion-tienda', kwargs={'slug': self.object.slug})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Tienda actualizada correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al actualizar la tienda')
+        return super().form_invalid(form)
+
+
 # vistas para adiciones
+
+# lista de adiciones
+class ListaAdiciones(ListView):
+    model = Aditions
+    template_name = 'store2/lista-adiciones.html'
+    context_object_name = 'adiciones'
+
+    def get_queryset(self):
+        self.shop = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        return Aditions.objects.filter(shop=self.shop)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shop'] = self.shop
+        return context
+
+# crear adiciones
+
+
+class CrearAdicion(CreateView):
+    model = Aditions
+    template_name = 'store2/crear-adiciones.html'
+    fields = ['name', 'price', 'shop']
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-adiciones', kwargs={'slug': self.kwargs['slug']})
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        if Aditions.objects.filter(name=name).exists():
+            messages.error(request, 'La adición ya existe')
+            return redirect('store2:crear-adiciones')
+        return super().post(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        shop = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        initial['shop'] = shop
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        shop = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        form.fields['shop'].queryset = Shop.objects.filter(pk=shop.pk)
+        form.fields['shop'].initial = shop
+        form.fields['shop'].widget.attrs['readonly'] = True
+        return form
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Adición creada correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear la adición')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shop'] = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        return context

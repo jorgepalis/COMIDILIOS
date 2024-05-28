@@ -40,4 +40,15 @@ urlpatterns = [
          views.EliminarAtributoHijo.as_view(), name='eliminar-atributo-hijo'),
     path('actualizar-atributo-hijo/<pk>/',
          views.ActualizarAtributoHijo.as_view(), name='actualizar-atributo-hijo'),
+
+    # tiendas
+    path('lista-tiendas/', views.ListaTiendas.as_view(), name='lista-tiendas'),
+    path('gestion-tienda/<slug>/', views.gestion_tienda, name='gestion-tienda'),
+    path('actualizar-tienda/<slug>/',
+         views.ActualizarTienda.as_view(), name='actualizar-tienda'),
+
+    # adiciones
+    path('lista-adiciones/<slug>/',
+         views.ListaAdiciones.as_view(), name='lista-adiciones'),
+    path('crear-adicion/<slug>/', views.CrearAdicion.as_view(), name='crear-adicion'),
 ]

@@ -1,0 +1,101 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load static tailwind_tags %}
+
+
+{% block title  %}
+<title>{{tienda.name}}</title>
+{% endblock title  %}
+
+{% block main %}
+<div class="flex m-4 items-center justify-center">
+    {% if not tienda.category %}
+    <h1 class="text-2xl font-bold text-center bg-blue-400 rounded-lg p-2">Sin categoria</h1>
+
+    {% else %}
+    <h1 class="text-2xl font-bold text-center bg-blue-400 rounded-lg p-2">{{tienda.category|capfirst}}</h1>
+
+    {% endif %}
+</div>
+
+<div class="flex m-4 items-center justify-center">
+    <a href="{% url 'store2:actualizar-tienda' tienda.slug %}" class="bg-green-400 p-2 rounded-lg">Editar tienda</a>
+</div>
+
+<div class ="flex flex-row gap-7 items-center justify-around my-7">
+    <div class = "flex flex-col bg-blue-400 p-3 rounded-lg gap-3">
+        <h2 class="text-xl font-bold text-center">Subcategorias</h2>
+        <ul >
+            {% if not tienda.subcategory.all %}
+                <li>No hay subcategorias</li>
+            {% else %}
+                {% for subcategoria in tienda.subcategory.all %}
+                    <li>{{subcategoria}}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+    <div class = "flex flex-col bg-blue-400 p-3 rounded-lg gap-3">
+        <h1 class="text-2xl font-bold text-center">Información</h1>
+        <p class="text-center">Nombre tienda: {{tienda.name}}</p>
+        <p class="text-center">Propietario: {{tienda.manager}}</p>
+        <p class="text-center">Correo: {{tienda.owner_email}}</p>
+        <p class="text-center">Telefono: {{tienda.phone}}</p>
+        <p class="text-center">Dirección: {{tienda.address}}</p>
+    </div>
+    <div class = "flex flex-col rounded-lg gap-3">
+        <a href="{% url 'store2:lista-adiciones' tienda.slug %}" class="bg-green-400 p-2 rounded-lg text-3xl">Adiciones</a>
+                
+    </div>
+    
+</div>
+
+
+
+<!-----------------------tabla productos------------------------------------------>
+<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Productos
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                    precio
+                </th>
+                
+                <th scope="col" class="px-6 py-3">
+                    Acción
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tienda %}
+            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ tienda.name|capfirst }}
+                </th>
+
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ tienda.owner_email|capfirst }}
+                </th>
+                
+                <th class="px-6 py-4">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Gestionar</a>
+
+                    {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
+                </th>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No hay productos</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock main %}
+
