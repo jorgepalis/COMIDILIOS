@@ -4,14 +4,16 @@ from . import views
 app_name = 'store2'
 
 urlpatterns = [
+    # categorias
     path('lista-categorias/', views.ListaCategorias.as_view(),
          name='lista-categorias'),
     path('crear-categoria/', views.CrearCategoria.as_view(), name='crear-categoria'),
-    path('eliminar-categoria/<int:pk>/',
+    path('eliminar-categoria/<slug>/',
          views.EliminarCategoria.as_view(), name='eliminar-categoria'),
-    path('actualizar-categoria/<int:pk>/',
+    path('actualizar-categoria/<slug>/',
          views.ActualizarCategoria.as_view(), name='actualizar-categoria'),
 
+    # subcategorias
     path('lista-subcategorias/<slug>/',
          views.ListaSubCategorias.as_view(), name='lista-subcategorias'),
     path('crear-subcategoria/<slug>/', views.CrearSubCategoria.as_view(),
@@ -20,4 +22,22 @@ urlpatterns = [
          views.EliminarSubCategoria.as_view(), name='eliminar-subcategoria'),
     path('actualizar-subcategoria/<slug>/',
          views.ActualizarSubCategoria.as_view(), name='actualizar-subcategoria'),
+
+    # atributos
+    path('lista-atributos/', views.ListaAtributos.as_view(), name='lista-atributos'),
+    path('crear-atributo/', views.CrearAtributo.as_view(), name='crear-atributo'),
+    path('eliminar-atributo/<slug>/',
+         views.EliminarAtributo.as_view(), name='eliminar-atributo'),
+    path('actualizar-atributo/<slug>/',
+         views.ActualizarAtributo.as_view(), name='actualizar-atributo'),
+
+    # atributos hijos
+    path('lista-atributos-hijos/<slug>/',
+         views.ListaAtributosHijos.as_view(), name='lista-atributos-hijos'),
+    path('crear-atributo-hijo/<slug>/',
+         views.CrearAtributoHijo.as_view(), name='crear-atributo-hijo'),
+    path('eliminar-atributo-hijo/<pk>/',
+         views.EliminarAtributoHijo.as_view(), name='eliminar-atributo-hijo'),
+    path('actualizar-atributo-hijo/<pk>/',
+         views.ActualizarAtributoHijo.as_view(), name='actualizar-atributo-hijo'),
 ]

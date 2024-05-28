@@ -25,6 +25,12 @@ class Shop(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=50, unique=True, blank=True)
+    category = models.ForeignKey(
+        'Category', on_delete=models.CASCADE, blank=True, null=True, related_name='shops')
+    subcategory = models.ManyToManyField(
+        'SubCategory', blank=True, related_name='shops')
+    adition = models.ManyToManyField(
+        'Aditions', blank=True, related_name='shops')
 
     def save(self, *args, **kwargs):
         if not self.slug or Shop.objects.filter(pk=self.pk, name=self.name).exists():
@@ -36,6 +42,7 @@ class Shop(models.Model):
 
 
 class SubCategory(models.Model):
+    # modelo para subcategorias globales
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(
@@ -54,6 +61,7 @@ class SubCategory(models.Model):
 
 
 class Category(models.Model):
+    # modelo para categorias globales
     name = models.CharField(max_length=255, blank=True, null=True)
     image = models.ImageField(
         upload_to='category_images/', blank=True, null=True)
@@ -71,28 +79,61 @@ class Category(models.Model):
 
 
 class Tags(models.Model):
+    # modelo para tags globales
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
 
+    def save(self, *args, **kwargs):
+        if not self.slug or Tags.objects.filter(pk=self.pk, name=self.name).exists():
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class AttributeChild(models.Model):
+    # modelo para atributos hijos globales
     name = models.CharField(max_length=255)
-    # price = models.FloatField(blank=True, null=True)
     checked = models.BooleanField(default=False)
+    atribute = models.ForeignKey(
+        'Attribute', on_delete=models.CASCADE, blank=True, null=True, related_name='attribute_childs')
 
     def __str__(self):
         return f'{self.name}'
 
 
 class Attribute(models.Model):
+    # modelo para atributos globales
     name = models.CharField(max_length=255)
-    attribute_child = models.ManyToManyField(AttributeChild, blank=True)
+    attribute_child = models.ManyToManyField(
+        AttributeChild, blank=True, related_name='attributes')
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
+
+    def save(self, *args, **kwargs):
+        if not self.slug or Attribute.objects.filter(pk=self.pk, name=self.name).exists():
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+class Aditions(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    shop = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, blank=True, null=True, related_name='aditions')
+    slug = models.SlugField(max_length=50, unique=True, blank=True)
+
+    def __str__(self):
+        return f'{self.name} - {self.price}'
+
+    def save(self, *args, **kwargs):
+        if not self.slug or Aditions.objects.filter(pk=self.pk, name=self.name).exists():
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Variation(models.Model):

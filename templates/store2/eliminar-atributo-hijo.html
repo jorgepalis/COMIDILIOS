@@ -9,13 +9,13 @@
 
 {% block main %}
 <div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7 flex-col gap-5">
-    <h1>¿Estás seguro de que deseas eliminar la categoria "{{ object.name }}"?</h1>
-    <form method="post" action="{% url 'store2:eliminar-categoria' object.slug  %}" class="flex flex-col">
+    <h1>¿Estás seguro de que deseas eliminar el valor "{{ object.name }}"?</h1>
+    <form method="post" action="{% url 'store2:eliminar-atributo-hijo' object.pk  %}" class="flex flex-col">
         {% csrf_token %}
         <div>
             <button type="submit" name="confirmar" type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Confirmar</button>
            
-            <a href="{% url 'store2:lista-categorias' %}" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Cancelar</a>
+            <a href="{% url 'store2:lista-atributos-hijos' object.atribute.slug %}" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Cancelar</a>
         </div>
         
     </form>

@@ -4,14 +4,14 @@
 
 
 {% block title  %}
-<title>Categorias</title>
+<title>Atributos</title>
 {% endblock title  %}
 
 {% block main %}
 
 
 <div class="flex items-center justify-center mt-20 ">
-    <a href="{% url 'store2:crear-categoria' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear Categoria</a>
+    <a href="{% url 'store2:crear-atributo' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear Atributo</a>
 </div>
 
 <!-----------------------tabla productos------------------------------------------>
@@ -20,7 +20,7 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Nombre Categoria
+                    Nombre Atributo
                 </th>
                 
                 <th scope="col" class="px-6 py-3">
@@ -29,18 +29,18 @@
             </tr>
         </thead>
         <tbody>
-            {% if categorias %}
+            {% if atributos %}
             
-            {% for categoria in categorias  %}
+            {% for atributo in atributos  %}
             <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ categoria.name|capfirst }}
+                    {{ atributo.name|capfirst }}
                 </th>
                 
                 <th class="px-6 py-4">
-                    <a href="{% url 'store2:actualizar-categoria' categoria.slug %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Edit</a>
-                    <a href="{% url 'store2:eliminar-categoria' categoria.slug %}" class="font-medium text-red-600 dark:text-red-700 hover:underline mr-3">Delete</a>
-                    <a href="{% url 'store2:lista-subcategorias' categoria.slug %}" class="font-medium text-green-600 dark:text-green-700 hover:underline ml-3">Subcategorias</a>
+                    <a href="{% url 'store2:actualizar-atributo' atributo.slug %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Edit</a>
+                    <a href="{% url 'store2:eliminar-atributo' atributo.slug %}" class="font-medium text-red-600 dark:text-red-700 hover:underline mr-3">Delete</a>
+                    <a href="{% url 'store2:lista-atributos-hijos' atributo.slug %}" class="font-medium text-green-600 dark:text-green-700 hover:underline ml-3">Valores</a>
 
                     {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
                 </th>
@@ -48,7 +48,7 @@
             {% endfor %}
             {% else %}
             <tr>
-                <td colspan="5" class="text-center">No hay categorias</td>
+                <td colspan="5" class="text-center">No hay atributos</td>
             </tr>
             {% endif %}
         </tbody>
