@@ -51,4 +51,25 @@ urlpatterns = [
     path('lista-adiciones/<slug>/',
          views.ListaAdiciones.as_view(), name='lista-adiciones'),
     path('crear-adicion/<slug>/', views.CrearAdicion.as_view(), name='crear-adicion'),
+
+    # items
+    path('crear-item/<slug>/', views.CrearItem.as_view(), name='crear-item'),
+    path('actualizar-item/<slug>/',
+         views.ActualizarItem.as_view(), name='actualizar-item'),
+    path('eliminar-item/<slug>/', views.EliminarItem.as_view(), name='eliminar-item'),
+
+    # variaciones
+    path('lista-variaciones/<slug>/',
+         views.ListaVariaciones.as_view(), name='lista-variaciones'),
+    path('crear-variacion/<slug>/',
+         views.CrearVariacion.as_view(), name='crear-variacion'),
+
+    # valores de variaciones
+    path('lista-valores-variacion/<pk>/',
+         views.ValoresVariacion.as_view(), name='lista-valores-variacion'),
+    path('crear-valor-variacion/<pk>/',
+         views.CrearValorVariacion.as_view(), name='crear-valor-variacion'),
+
+    # producto completo
+    path('producto/<slug>/', views.ver_producto, name='ver-producto'),
 ]

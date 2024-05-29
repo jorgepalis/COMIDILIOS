@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 from django.contrib import messages
-from store.models import Category, SubCategory, Attribute, AttributeChild, Shop, Aditions
-from store2.forms import CategoryForm, SubcategoryForm, AttributeForm, AttributeChildForm, ShopForm
+from store.models import Category, SubCategory, Attribute, AttributeChild, Shop, Aditions, Item, Variation, VariationValue, VARIATION_CHOICES
+from store2.forms import CategoryForm, SubcategoryForm, AttributeForm, AttributeChildForm, ShopForm, ItemForm, AditionsForm, VariationForm, VariationValueForm
 
 # Create your views here.
 
@@ -435,3 +435,243 @@ class CrearAdicion(CreateView):
         context = super().get_context_data(**kwargs)
         context['shop'] = get_object_or_404(Shop, slug=self.kwargs['slug'])
         return context
+
+# eliminar adiciones
+
+# editar adiciones
+
+# vistas para items
+
+# crear items
+
+
+class CrearItem(CreateView):
+    model = Item
+    template_name = 'store2/crear-item.html'
+    form_class = ItemForm
+
+    def get_success_url(self):
+        return reverse_lazy('store2:gestion-tienda', kwargs={'slug': self.kwargs['slug']})
+
+    def dispatch(self, *args, **kwargs):
+        # Verifica que la tienda existe
+        self.shop = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['shop'] = self.shop
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['shop'].queryset = Shop.objects.filter(pk=self.shop.pk)
+        form.fields['shop'].initial = self.shop
+        form.fields['shop'].widget.attrs['readonly'] = True
+        return form
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        if Item.objects.filter(name=name).exists():
+            messages.error(request, 'El item ya existe')
+            return redirect('store2:crear-item', slug=self.kwargs['slug'])
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Item creado correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear el item')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shop'] = get_object_or_404(Shop, slug=self.kwargs['slug'])
+        return context
+
+# editar items
+
+
+class ActualizarItem(UpdateView):
+    model = Item
+    template_name = 'store2/actualizar-item.html'
+    form_class = ItemForm
+
+    def get_success_url(self):
+        return reverse_lazy('store2:gestion-tienda', kwargs={'slug': self.object.shop.slug})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Item actualizado correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al actualizar el item')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shop'] = get_object_or_404(Shop, slug=self.object.shop.slug)
+        return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['shop'].disabled = True
+        return form
+
+# eliminar items
+
+
+class EliminarItem(DeleteView):
+    model = Item
+    template_name = 'store2/eliminar-item.html'
+
+    def get_success_url(self):
+        return reverse_lazy('store2:gestion-tienda', kwargs={'slug': self.object.shop.slug})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Item eliminado correctamente')
+        return super().form_valid(form)
+
+
+# vistas para variaciones
+
+# lista de variaciones
+class ListaVariaciones(ListView):
+    model = Variation
+    template_name = 'store2/lista-variaciones.html'
+    context_object_name = 'variaciones'
+
+    def get_queryset(self):
+        self.item = get_object_or_404(Item, slug=self.kwargs['slug'])
+        return Variation.objects.filter(item=self.item)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['item'] = self.item
+        return context
+
+
+# crear variaciones
+class CrearVariacion(CreateView):
+    model = Variation
+    template_name = 'store2/crear-variacion.html'
+    form_class = VariationForm
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-variaciones', kwargs={'slug': self.kwargs['slug']})
+
+    def dispatch(self, *args, **kwargs):
+        # Verifica que el item existe
+        self.item = get_object_or_404(Item, slug=self.kwargs['slug'])
+        return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['item'] = self.item
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['item'].queryset = Item.objects.filter(pk=self.item.pk)
+        form.fields['item'].initial = self.item
+        form.fields['item'].widget.attrs['readonly'] = True
+        return form
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST.get('name')
+        if Variation.objects.filter(name=name, item=self.item).exists():
+            messages.error(request, 'La variación ya existe')
+            return redirect('store2:crear-variacion', slug=self.kwargs['slug'])
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Variación creada correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear la variación')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['item'] = get_object_or_404(Item, slug=self.kwargs['slug'])
+        return context
+
+
+# valores variaciones
+class ValoresVariacion(ListView):
+    model = VariationValue
+    template_name = 'store2/lista-valores-variacion.html'
+    context_object_name = 'valores'
+
+    def get_queryset(self):
+        self.variation = get_object_or_404(Variation, pk=self.kwargs['pk'])
+        return VariationValue.objects.filter(variation=self.variation)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['variation'] = self.variation
+        return context
+
+# crear valores de variaciones
+
+
+class CrearValorVariacion(CreateView):
+    model = VariationValue
+    template_name = 'store2/crear-valor-variacion.html'
+    form_class = VariationValueForm
+
+    def get_success_url(self):
+        return reverse_lazy('store2:lista-valores-variacion', kwargs={'pk': self.kwargs['pk']})
+
+    def dispatch(self, *args, **kwargs):
+        # Verifica que la variación existe
+        self.variation = get_object_or_404(Variation, pk=self.kwargs['pk'])
+        return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['variation'] = self.variation
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['variation'].queryset = Variation.objects.filter(
+            pk=self.variation.pk)
+        form.fields['variation'].initial = self.variation
+        form.fields['variation'].widget.attrs['readonly'] = True
+        form.fields['value'].queryset = AttributeChild.objects.filter(
+            atribute=self.variation.attribute)
+        return form
+
+    def post(self, request, *args, **kwargs):
+        value = request.POST.get('value')
+        if VariationValue.objects.filter(value=value, variation=self.variation).exists():
+            messages.error(request, 'El valor de la variación ya existe')
+            return redirect('store2:crear-valor-variacion', pk=self.kwargs['pk'])
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'Valor de la variación creado correctamente')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear el valor de la variación')
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['variation'] = get_object_or_404(
+            Variation, pk=self.kwargs['pk'])
+        return context
+
+
+# ver producto completo
+def ver_producto(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    context = {
+        'item': item
+    }
+    return render(request, 'store2/producto-completo.html', context)

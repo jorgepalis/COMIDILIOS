@@ -1,5 +1,5 @@
 from django import forms
-from store.models import Category, SubCategory, Attribute, AttributeChild, Shop, Aditions
+from store.models import Category, SubCategory, Attribute, AttributeChild, Shop, Aditions, Item, Variation, VariationValue, VARIATION_CHOICES
 
 # form category
 
@@ -80,4 +80,55 @@ class AditionsForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'shop': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+# form items
+
+class ItemForm(forms.ModelForm):
+    queryadition = Aditions.objects.all()
+    adition = forms.ModelMultipleChoiceField(
+        queryset=queryadition, widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Item
+        fields = ['shop', 'name', 'description', 'image',
+                  'tags', 'price', 'adition', 'subcategory']
+
+        widgets = {
+            'shop': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'subcategory': forms.Select(attrs={'class': 'form-control'}),
+
+
+        }
+
+
+# form variation
+class VariationForm(forms.ModelForm):
+    class Meta:
+        model = Variation
+        fields = ['item', 'name', 'attribute', 'type']
+        widgets = {
+            'item': forms.Select(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'attribute': forms.Select(attrs={'class': 'form-control'}),
+            'type': forms.Select(choices=VARIATION_CHOICES, attrs={'class': 'form-control'}),
+        }
+
+# form variation value
+
+
+class VariationValueForm(forms.ModelForm):
+    class Meta:
+        model = VariationValue
+        fields = ['variation', 'value', 'price']
+        widgets = {
+            'variation': forms.Select(attrs={'class': 'form-control'}),
+            'value': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
         }

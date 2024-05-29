@@ -30,7 +30,7 @@ class Shop(models.Model):
     subcategory = models.ManyToManyField(
         'SubCategory', blank=True, related_name='shops')
     adition = models.ManyToManyField(
-        'Aditions', blank=True, null=True, related_name='shops')
+        'Aditions', blank=True, related_name='shops')
 
     def save(self, *args, **kwargs):
         if not self.slug or Shop.objects.filter(pk=self.pk, name=self.name).exists():
@@ -128,7 +128,7 @@ class Aditions(models.Model):
     slug = models.SlugField(max_length=50, unique=True, blank=True)
 
     def __str__(self):
-        return f'{self.name} - {self.price}'
+        return f'{self.name} + ${self.price}'
 
     def save(self, *args, **kwargs):
         if not self.slug or Aditions.objects.filter(pk=self.pk, name=self.name).exists():
@@ -138,14 +138,15 @@ class Aditions(models.Model):
 
 class Item(models.Model):
     shop = models.ForeignKey(
-        Shop, on_delete=models.CASCADE, blank=True, null=True)
-    selected_cat_sub_categories_id = models.TextField(blank=True, null=True)
-    categories = models.ManyToManyField(Category, blank=True, null=True)
+        Shop, on_delete=models.CASCADE, blank=True, null=True, related_name='items')
+    subcategory = models.ForeignKey(
+        SubCategory, on_delete=models.CASCADE, blank=True, null=True)
     tags = models.ManyToManyField(Tags, blank=True)
-    attributes = models.ManyToManyField(Attribute, blank=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     inventory = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    adition = models.ManyToManyField(
+        Aditions, blank=True, related_name='items')
     price = models.FloatField(blank=True, null=True)
     stars = models.IntegerField(blank=True, null=True)
     discount_price = models.FloatField(blank=True, null=True)
@@ -171,7 +172,7 @@ VARIATION_CHOICES = (
 
 class Variation(models.Model):
     item = models.ForeignKey(
-        Item, on_delete=models.CASCADE, blank=True, null=True)
+        Item, on_delete=models.CASCADE, blank=True, null=True, related_name='variations')
     name = models.CharField(max_length=50, blank=True, null=True)
     attribute = models.ForeignKey(
         Attribute, on_delete=models.CASCADE, blank=True, null=True)
@@ -184,13 +185,15 @@ class Variation(models.Model):
 
 class VariationValue(models.Model):
     variation = models.ForeignKey(
-        Variation, on_delete=models.CASCADE, blank=True, null=True)
+        Variation, on_delete=models.CASCADE, blank=True, null=True, related_name='values')
     price = models.FloatField(blank=True, null=True)
     value = models.ForeignKey(
         AttributeChild, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.value}'
+        return f'{self.value} + ${self.price}'
+
+#######################################################################################
 
 
 class ItemAttribute(models.Model):

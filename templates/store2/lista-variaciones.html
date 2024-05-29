@@ -1,0 +1,72 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load static tailwind_tags %}
+
+
+{% block title  %}
+<title>Variacion</title>
+{% endblock title  %}
+
+{% block main %}
+
+
+<div class="flex items-center justify-center mt-20 ">
+    <a href="{% url 'store2:crear-variacion' item.slug %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear variación</a>
+</div>
+
+<!-----------------------tabla productos------------------------------------------>
+<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Nombre variación
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                    valores
+                </th>
+                
+                <th scope="col" class="px-6 py-3">
+                    Acción
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if variaciones %}
+            
+            {% for variacion in variaciones  %}
+            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ variacion.name|capfirst }}
+                </th>
+
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {% for valor in variacion.values.all %}
+                        {% if forloop.last %}
+                            {{ valor.value|capfirst }}
+                        {% else %}
+                            {{ valor.value|capfirst }},
+                        {% endif %}
+                        
+                    {% endfor %}
+                </th>
+                
+                <th class="px-6 py-4">
+                    <a href="{% url 'store2:lista-valores-variacion' variacion.pk %}" class="font-medium text-green-600 dark:text-green-500 hover:underline mr-3">valores</a>
+                    {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
+                </th>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No hay variaciones</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock main %}
+

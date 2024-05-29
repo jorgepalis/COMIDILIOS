@@ -53,12 +53,19 @@
 
 
 <!-----------------------tabla productos------------------------------------------>
-<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-7">
+<div class="flex items-center justify-center mt-9">
+    <a href="{% url 'store2:crear-item' tienda.slug %}" class="text-2xl font-bold text-center bg-gray-700 rounded-lg p-2 text-white">Crear Producto</a>
+</div>
+<div class="flex overflow-x-auto shadow-md sm:rounded-lg items-center justify-center mx-6 mt-4">
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Productos
+                    Producto
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                    Subcategoria
                 </th>
 
                 <th scope="col" class="px-6 py-3">
@@ -71,22 +78,30 @@
             </tr>
         </thead>
         <tbody>
-            {% if tienda %}
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ tienda.name|capfirst }}
-                </th>
+            {% if tienda.items %}
+                {% for producto in tienda.items.all %}
+                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ producto.name|capfirst }}
+                        </th>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ producto.subcategory|capfirst }}
+                        </th>
 
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ tienda.owner_email|capfirst }}
-                </th>
-                
-                <th class="px-6 py-4">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Gestionar</a>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ producto.price|capfirst }}
+                        </th>
+                        
+                        <th class="px-6 py-4">
+                            <a href="{% url 'store2:actualizar-item' producto.slug %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3">Editar</a>
+                            <a href="{% url 'store2:eliminar-item' producto.slug %}" class="font-medium text-red-600 dark:text-red-500 hover:underline mr-3">eliminar</a>
+                            <a href="{% url 'store2:lista-variaciones' producto.slug %}" class="font-medium text-green-600 dark:text-green-500 hover:underline mr-3">variaciones</a>
+                            <a href="{% url 'store2:ver-producto' producto.slug %}" class="font-medium text-yellow-600 dark:text-yellow-500 hover:underline mr-3">Ver producto</a>
 
-                    {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
-                </th>
-            </tr>
+                            {% comment %} <button data-modal-target="modal-eliminar-{{ producto.id }}" data-modal-toggle="modal-eliminar-{{ producto.id }}" class="font-medium text-red-600 dark:text-red-700 hover:underline">Delete</button> {% endcomment %}
+                        </th>
+                    </tr>
+                {% endfor %}
             {% else %}
             <tr>
                 <td colspan="5" class="text-center">No hay productos</td>
